@@ -1,0 +1,367 @@
+/* ===================================================
+   Electricity Usage Estimator – Styles
+   =================================================== */
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --primary: #2563eb;
+  --primary-dark: #1d4ed8;
+  --primary-light: #eff6ff;
+  --accent: #f59e0b;
+  --success: #10b981;
+  --danger: #ef4444;
+  --danger-light: #fef2f2;
+  --inactive: #6b7280;
+  --inactive-light: #f9fafb;
+  --bg: #f1f5f9;
+  --card-bg: #ffffff;
+  --text: #1e293b;
+  --text-muted: #64748b;
+  --border: #e2e8f0;
+  --radius: 12px;
+  --shadow: 0 1px 3px rgba(0,0,0,.08), 0 4px 12px rgba(0,0,0,.06);
+}
+
+body {
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  padding: 24px 16px 48px;
+  line-height: 1.6;
+}
+
+/* ---- Layout ---- */
+.container {
+  max-width: 860px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* ---- Header ---- */
+header {
+  text-align: center;
+  padding: 16px 0 8px;
+}
+
+header h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--primary);
+  letter-spacing: -.5px;
+}
+
+.subtitle {
+  color: var(--text-muted);
+  margin-top: 4px;
+  font-size: .95rem;
+}
+
+/* ---- Card ---- */
+.card {
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 28px 32px;
+  border: 1px solid var(--border);
+}
+
+.card h2 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 20px;
+  color: var(--text);
+  padding-bottom: 12px;
+  border-bottom: 2px solid var(--primary-light);
+}
+
+/* ---- Forms ---- */
+.form-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  align-items: flex-end;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex: 1 1 160px;
+}
+
+.form-group label {
+  font-size: .85rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: .4px;
+}
+
+input[type="text"],
+input[type="number"] {
+  padding: 10px 14px;
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  font-size: .95rem;
+  color: var(--text);
+  background: #fafafa;
+  transition: border-color .15s, box-shadow .15s;
+  outline: none;
+}
+
+input[type="text"]:focus,
+input[type="number"]:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(37,99,235,.12);
+  background: #fff;
+}
+
+.hint {
+  font-size: .78rem;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+/* ---- Toggle (On/Off radio) ---- */
+.appliance-toggle-group {
+  flex: 0 1 120px;
+}
+
+.toggle-row {
+  display: flex;
+  gap: 12px;
+  padding: 10px 0;
+}
+
+.toggle-label {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: .9rem;
+  font-weight: 500;
+  cursor: pointer;
+  text-transform: none;
+  letter-spacing: 0;
+  color: var(--text);
+}
+
+.toggle-label input[type="radio"] {
+  accent-color: var(--primary);
+  width: 16px;
+  height: 16px;
+}
+
+/* ---- Buttons ---- */
+.btn {
+  padding: 10px 22px;
+  border: none;
+  border-radius: 8px;
+  font-size: .92rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background .15s, transform .1s, box-shadow .15s;
+}
+
+.btn:active { transform: translateY(1px); }
+
+.btn-primary {
+  background: var(--primary);
+  color: #fff;
+  margin-top: 16px;
+}
+
+.btn-primary:hover { background: var(--primary-dark); box-shadow: 0 4px 12px rgba(37,99,235,.3); }
+
+.btn-danger {
+  background: transparent;
+  color: var(--danger);
+  border: 1.5px solid var(--danger);
+  padding: 5px 12px;
+  font-size: .82rem;
+}
+
+.btn-danger:hover { background: var(--danger-light); }
+
+/* ---- Error message ---- */
+.error-msg {
+  color: var(--danger);
+  font-size: .87rem;
+  margin-top: 10px;
+  font-weight: 500;
+}
+
+/* ---- Appliance table ---- */
+#appliance-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: .9rem;
+}
+
+#appliance-table th {
+  text-align: left;
+  padding: 10px 14px;
+  background: var(--primary-light);
+  color: var(--primary-dark);
+  font-size: .8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .5px;
+}
+
+#appliance-table th:first-child { border-radius: 8px 0 0 8px; }
+#appliance-table th:last-child  { border-radius: 0 8px 8px 0; }
+
+#appliance-table td {
+  padding: 11px 14px;
+  border-bottom: 1px solid var(--border);
+  vertical-align: middle;
+}
+
+#appliance-table tbody tr:last-child td { border-bottom: none; }
+
+#appliance-table tbody tr:hover { background: #f8fafd; }
+
+.status-badge {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: .78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .4px;
+}
+
+.status-on  { background: #d1fae5; color: #065f46; }
+.status-off { background: #f3f4f6; color: #6b7280; }
+
+.cost-cell { font-weight: 700; color: var(--primary); }
+.cost-cell.inactive { color: var(--inactive); text-decoration: line-through; }
+
+/* ---- Summary Grid ---- */
+.summary-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 16px;
+  margin-bottom: 28px;
+}
+
+.summary-card {
+  border-radius: 10px;
+  padding: 18px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.active-card   { background: var(--primary-light); border: 1.5px solid #bfdbfe; }
+.inactive-card { background: #f0fdf4; border: 1.5px solid #bbf7d0; }
+.rate-card     { background: #fefce8; border: 1.5px solid #fde68a; }
+
+.summary-label {
+  font-size: .78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .5px;
+  color: var(--text-muted);
+}
+
+.summary-value {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--text);
+}
+
+/* ---- Breakdown bars ---- */
+#breakdown-section h3 {
+  font-size: .95rem;
+  font-weight: 700;
+  margin-bottom: 14px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: .5px;
+}
+
+.breakdown-bar-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 10px;
+  font-size: .88rem;
+}
+
+.breakdown-name {
+  width: 160px;
+  flex-shrink: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-weight: 500;
+}
+
+.breakdown-track {
+  flex: 1;
+  height: 12px;
+  background: var(--border);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.breakdown-fill {
+  height: 100%;
+  border-radius: 999px;
+  transition: width .4s ease;
+}
+
+.fill-on  { background: linear-gradient(90deg, #3b82f6, #2563eb); }
+.fill-off { background: #d1d5db; }
+
+.breakdown-amount {
+  width: 80px;
+  text-align: right;
+  font-weight: 700;
+  color: var(--primary);
+  flex-shrink: 0;
+}
+
+.breakdown-amount.off { color: var(--inactive); }
+
+/* ---- Empty states ---- */
+.empty-state {
+  text-align: center;
+  padding: 28px 16px;
+  color: var(--text-muted);
+  font-size: .95rem;
+  background: var(--bg);
+  border-radius: 8px;
+  border: 1.5px dashed var(--border);
+}
+
+/* ---- Footer ---- */
+footer {
+  text-align: center;
+  color: var(--text-muted);
+  font-size: .82rem;
+  padding-top: 8px;
+}
+
+/* ---- Utility ---- */
+.hidden { display: none !important; }
+
+/* ---- Responsive ---- */
+@media (max-width: 600px) {
+  .card { padding: 20px 16px; }
+  header h1 { font-size: 1.5rem; }
+  .summary-value { font-size: 1.15rem; }
+  #appliance-table { font-size: .82rem; }
+  #appliance-table th,
+  #appliance-table td { padding: 8px 10px; }
+  .breakdown-name { width: 100px; }
+}

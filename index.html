@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Electricity Usage Estimator</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>⚡ Electricity Usage Estimator</h1>
+      <p class="subtitle">Calculate your monthly electricity costs by appliance</p>
+    </header>
+
+    <!-- kWh Price Section -->
+    <section class="card" id="price-section">
+      <h2>Step 1: Set Your Electricity Rate</h2>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="kw-price">Price per kWh ($)</label>
+          <input
+            type="number"
+            id="kw-price"
+            placeholder="e.g. 0.12"
+            min="0"
+            step="0.001"
+            value="0.12"
+          />
+        </div>
+        <div class="form-group">
+          <label for="days-in-month">Days in billing month</label>
+          <input
+            type="number"
+            id="days-in-month"
+            placeholder="e.g. 30"
+            min="1"
+            max="31"
+            value="30"
+          />
+        </div>
+      </div>
+    </section>
+
+    <!-- Add Appliance Section -->
+    <section class="card" id="add-section">
+      <h2>Step 2: Add Your Appliances</h2>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="appliance-name">Appliance Name</label>
+          <input
+            type="text"
+            id="appliance-name"
+            placeholder="e.g. Refrigerator"
+            maxlength="60"
+          />
+        </div>
+        <div class="form-group">
+          <label for="appliance-kw">Power Rating (kW)</label>
+          <input
+            type="number"
+            id="appliance-kw"
+            placeholder="e.g. 0.15"
+            min="0"
+            step="0.001"
+          />
+        </div>
+        <div class="form-group">
+          <label for="hours-per-day">Hours Used Per Day</label>
+          <input
+            type="number"
+            id="hours-per-day"
+            placeholder="e.g. 8"
+            min="0"
+            max="24"
+            step="0.5"
+            value="24"
+          />
+          <span class="hint">Use 24 for appliances on all month</span>
+        </div>
+        <div class="form-group appliance-toggle-group">
+          <label>Status</label>
+          <div class="toggle-row">
+            <label class="toggle-label">
+              <input type="radio" name="appliance-status" value="on" checked /> On
+            </label>
+            <label class="toggle-label">
+              <input type="radio" name="appliance-status" value="off" /> Off
+            </label>
+          </div>
+        </div>
+      </div>
+      <button class="btn btn-primary" id="add-btn">+ Add Appliance</button>
+      <p class="error-msg hidden" id="add-error"></p>
+    </section>
+
+    <!-- Appliance List Section -->
+    <section class="card" id="list-section">
+      <h2>Step 3: Review Appliances</h2>
+      <div id="empty-state" class="empty-state">
+        <p>No appliances added yet. Add some appliances above to get started.</p>
+      </div>
+      <div id="appliance-table-wrapper" class="hidden">
+        <table id="appliance-table">
+          <thead>
+            <tr>
+              <th>Appliance</th>
+              <th>Power (kW)</th>
+              <th>Hours/Day</th>
+              <th>Status</th>
+              <th>Monthly kWh</th>
+              <th>Monthly Cost</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="appliance-tbody"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Results Section -->
+    <section class="card" id="results-section">
+      <h2>Monthly Electricity Summary</h2>
+      <div id="no-results" class="empty-state">
+        <p>Add appliances above to see your estimated monthly costs.</p>
+      </div>
+      <div id="results-content" class="hidden">
+        <div class="summary-grid">
+          <div class="summary-card active-card">
+            <span class="summary-label">Total Usage (Active Appliances)</span>
+            <span class="summary-value" id="total-kwh">0.00 kWh</span>
+          </div>
+          <div class="summary-card active-card">
+            <span class="summary-label">Total Monthly Cost (Active)</span>
+            <span class="summary-value" id="total-cost">$0.00</span>
+          </div>
+          <div class="summary-card inactive-card">
+            <span class="summary-label">Potential Savings (Off Appliances)</span>
+            <span class="summary-value" id="savings-kwh">0.00 kWh / $0.00</span>
+          </div>
+          <div class="summary-card rate-card">
+            <span class="summary-label">Rate Applied</span>
+            <span class="summary-value" id="rate-applied">$0.00 / kWh</span>
+          </div>
+        </div>
+
+        <div id="breakdown-section">
+          <h3>Cost Breakdown</h3>
+          <div id="breakdown-bars"></div>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      <p>Usage Estimator &mdash; Helping you understand your electricity consumption</p>
+    </footer>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
