@@ -14,18 +14,37 @@
 "use strict";
 
 /* ─────────────────────────────────────────────
+   Currency Data
+   Exchange rates expressed as: 1 unit of currency = N NGN
+   Rates are approximate and for estimation purposes only.
+   ───────────────────────────────────────────── */
+const CURRENCIES = {
+  NGN: { symbol: "₦",   name: "Nigerian Naira",    rateToNGN: 1     },
+  USD: { symbol: "$",   name: "US Dollar",          rateToNGN: 1550  },
+  EUR: { symbol: "€",   name: "Euro",               rateToNGN: 1680  },
+  GBP: { symbol: "£",   name: "British Pound",      rateToNGN: 1960  },
+  GHS: { symbol: "₵",   name: "Ghanaian Cedi",      rateToNGN: 105   },
+  KES: { symbol: "KSh", name: "Kenyan Shilling",    rateToNGN: 12    },
+  ZAR: { symbol: "R",   name: "South African Rand", rateToNGN: 83    },
+  XOF: { symbol: "CFA", name: "West African Franc", rateToNGN: 2.6   },
+};
+
+/* ─────────────────────────────────────────────
    State
    ───────────────────────────────────────────── */
 const state = {
-  appliances: [],   // { id, name, kw, hoursPerDay, status }
-  nextId: 1,
+  appliances:   [],   // { id, name, kw, hoursPerDay, status }
+  nextId:       1,
+  currencyCode: "NGN",
 };
 
 /* ─────────────────────────────────────────────
    DOM References
    ───────────────────────────────────────────── */
-const kwPriceInput   = document.getElementById("kw-price");
-const daysInput      = document.getElementById("days-in-month");
+const currencySelect      = document.getElementById("currency-select");
+const currencySymbolLabel = document.getElementById("currency-symbol-label");
+const kwPriceInput        = document.getElementById("kw-price");
+const daysInput           = document.getElementById("days-in-month");
 const nameInput      = document.getElementById("appliance-name");
 const kwInput        = document.getElementById("appliance-kw");
 const hoursInput     = document.getElementById("hours-per-day");
@@ -60,12 +79,14 @@ function getSelectedStatus() {
 }
 
 /**
- * Format a number as a dollar amount with two decimal places.
+ * Format a number as a currency amount with two decimal places,
+ * using the currently selected currency symbol.
  * @param {number} n
  * @returns {string}
  */
 function formatCurrency(n) {
-  return "$" + n.toFixed(2);
+  const { symbol } = CURRENCIES[state.currencyCode];
+  return symbol + n.toFixed(2);
 }
 
 /**
@@ -183,6 +204,28 @@ function toggleStatus(id) {
 // Re-render whenever rate or days inputs change
 kwPriceInput.addEventListener("input", render);
 daysInput.addEventListener("input", render);
+
+/* ─────────────────────────────────────────────
+   Currency change handler
+   ───────────────────────────────────────────── */
+currencySelect.addEventListener("change", () => {
+  const prevCode = state.currencyCode;
+  const newCode  = currencySelect.value;
+
+  if (prevCode === newCode) return;
+
+  // Convert the current kWh price from the old currency to the new one
+  const currentPrice = parseFloat(kwPriceInput.value);
+  if (!isNaN(currentPrice) && currentPrice > 0) {
+    const priceInNGN    = currentPrice * CURRENCIES[prevCode].rateToNGN;
+    const priceInNew    = priceInNGN / CURRENCIES[newCode].rateToNGN;
+    kwPriceInput.value  = priceInNew.toFixed(4).replace(/\.?0+$/, "");
+  }
+
+  state.currencyCode = newCode;
+  currencySymbolLabel.textContent = CURRENCIES[newCode].symbol;
+  render();
+});
 
 function render() {
   renderTable();
@@ -303,17 +346,20 @@ function exportCSV() {
   const days  = parseFloat(daysInput.value) || 30;
   const price = parseFloat(kwPriceInput.value) || 0;
 
+  const { symbol: currSymbol, name: currName } = CURRENCIES[state.currencyCode];
+
   const rows = [];
 
   // Report header
   rows.push(["Electricity Usage Estimator – Monthly Report"]);
-  rows.push(["Rate ($/kWh)", price.toFixed(3)]);
+  rows.push([`Rate (${currSymbol}/kWh)`, price.toFixed(3)]);
+  rows.push(["Currency", `${currName} (${state.currencyCode})`]);
   rows.push(["Billing Days", days]);
   rows.push(["Generated", new Date().toLocaleString()]);
   rows.push([]);
 
   // Table header
-  rows.push(["Appliance", "Power (kW)", "Hours/Day", "Status", "Monthly kWh", "Monthly Cost ($)"]);
+  rows.push(["Appliance", "Power (kW)", "Hours/Day", "Status", "Monthly kWh", `Monthly Cost (${state.currencyCode})`]);
 
   let totalActiveKwh  = 0;
   let totalActiveCost = 0;
@@ -347,9 +393,9 @@ function exportCSV() {
   rows.push([]);
   rows.push(["Summary"]);
   rows.push(["Total Usage – Active Appliances (kWh)", totalActiveKwh.toFixed(2)]);
-  rows.push(["Total Monthly Cost – Active ($)",       totalActiveCost.toFixed(2)]);
+  rows.push([`Total Monthly Cost – Active (${state.currencyCode})`,       totalActiveCost.toFixed(2)]);
   rows.push(["Potential Savings – Off Appliances (kWh)", totalOffKwh.toFixed(2)]);
-  rows.push(["Potential Savings – Off Appliances ($)",   totalOffCost.toFixed(2)]);
+  rows.push([`Potential Savings – Off Appliances (${state.currencyCode})`,   totalOffCost.toFixed(2)]);
 
   // Encode to CSV
   const csvContent = rows
