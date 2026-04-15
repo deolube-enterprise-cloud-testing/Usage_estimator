@@ -18,14 +18,27 @@
       <h2>Step 1: Set Your Electricity Rate</h2>
       <div class="form-row">
         <div class="form-group">
-          <label for="kw-price">Price per kWh ($)</label>
+          <label for="currency-select">Currency</label>
+          <select id="currency-select">
+            <option value="NGN" selected>₦ Nigerian Naira (NGN)</option>
+            <option value="USD">$ US Dollar (USD)</option>
+            <option value="EUR">€ Euro (EUR)</option>
+            <option value="GBP">£ British Pound (GBP)</option>
+            <option value="GHS">₵ Ghanaian Cedi (GHS)</option>
+            <option value="KES">KSh Kenyan Shilling (KES)</option>
+            <option value="ZAR">R South African Rand (ZAR)</option>
+            <option value="XOF">CFA West African Franc (XOF)</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="kw-price">Price per kWh (<span id="currency-symbol-label">₦</span>)</label>
           <input
             type="number"
             id="kw-price"
-            placeholder="e.g. 0.12"
+            placeholder="e.g. 68"
             min="0"
             step="0.001"
-            value="0.12"
+            value="68"
           />
         </div>
         <div class="form-group">
@@ -40,6 +53,7 @@
           />
         </div>
       </div>
+      <p class="hint currency-note">Exchange rates are approximate and for estimation purposes only.</p>
     </section>
 
     <!-- Add Appliance Section -->
@@ -132,15 +146,15 @@
           </div>
           <div class="summary-card active-card">
             <span class="summary-label">Total Monthly Cost (Active)</span>
-            <span class="summary-value" id="total-cost">$0.00</span>
+            <span class="summary-value" id="total-cost">₦0.00</span>
           </div>
           <div class="summary-card inactive-card">
             <span class="summary-label">Potential Savings (Off Appliances)</span>
-            <span class="summary-value" id="savings-kwh">0.00 kWh / $0.00</span>
+            <span class="summary-value" id="savings-kwh">0.00 kWh / ₦0.00</span>
           </div>
           <div class="summary-card rate-card">
             <span class="summary-label">Rate Applied</span>
-            <span class="summary-value" id="rate-applied">$0.00 / kWh</span>
+            <span class="summary-value" id="rate-applied">₦0.00 / kWh</span>
           </div>
         </div>
 
