@@ -138,6 +138,25 @@ select:focus {
   margin-top: 2px;
 }
 
+/* ---- Power input row (number + unit selector) ---- */
+.power-input-row {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.power-input-row input[type="number"] {
+  flex: 1;
+  min-width: 0;
+}
+
+.power-input-row select {
+  flex: 0 0 60px;
+  padding: 10px 6px;
+  font-weight: 600;
+  text-align: center;
+}
+
 /* ---- Toggle (On/Off radio) ---- */
 .appliance-toggle-group {
   flex: 0 1 120px;

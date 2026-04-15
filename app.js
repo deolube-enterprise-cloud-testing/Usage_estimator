@@ -47,6 +47,7 @@ const kwPriceInput        = document.getElementById("kw-price");
 const daysInput           = document.getElementById("days-in-month");
 const nameInput      = document.getElementById("appliance-name");
 const kwInput        = document.getElementById("appliance-kw");
+const powerUnitSelect = document.getElementById("power-unit");
 const hoursInput     = document.getElementById("hours-per-day");
 const addBtn         = document.getElementById("add-btn");
 const addError       = document.getElementById("add-error");
@@ -124,6 +125,17 @@ hoursInput.addEventListener("keydown", (e) => {
   if (e.key === "Enter") addAppliance();
 });
 
+// Update placeholder and step when unit changes
+powerUnitSelect.addEventListener("change", () => {
+  if (powerUnitSelect.value === "W") {
+    kwInput.placeholder = "e.g. 150";
+    kwInput.step = "1";
+  } else {
+    kwInput.placeholder = "e.g. 0.15";
+    kwInput.step = "0.001";
+  }
+});
+
 function showError(msg) {
   addError.textContent = msg;
   addError.classList.remove("hidden");
@@ -138,7 +150,9 @@ function addAppliance() {
   clearError();
 
   const name      = nameInput.value.trim();
-  const kw        = parseFloat(kwInput.value);
+  const rawPower  = parseFloat(kwInput.value);
+  const unit      = powerUnitSelect.value;
+  const kw        = unit === "W" ? rawPower / 1000 : rawPower;
   const hours     = parseFloat(hoursInput.value);
   const status    = getSelectedStatus();
 
@@ -148,8 +162,8 @@ function addAppliance() {
     nameInput.focus();
     return;
   }
-  if (isNaN(kw) || kw <= 0) {
-    showError("Please enter a valid power rating in kW (must be greater than 0).");
+  if (isNaN(rawPower) || rawPower <= 0) {
+    showError(`Please enter a valid power rating in ${unit} (must be greater than 0).`);
     kwInput.focus();
     return;
   }
@@ -171,6 +185,10 @@ function addAppliance() {
   nameInput.value  = "";
   kwInput.value    = "";
   hoursInput.value = "24";
+  // Reset unit selector to W and restore placeholder
+  powerUnitSelect.value = "W";
+  kwInput.placeholder   = "e.g. 150";
+  kwInput.step          = "1";
   // Reset radio to "on"
   document.querySelector('input[name="appliance-status"][value="on"]').checked = true;
   nameInput.focus();
