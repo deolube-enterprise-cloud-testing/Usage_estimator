@@ -293,8 +293,89 @@ function renderResults() {
 }
 
 /* ─────────────────────────────────────────────
-   Security helper
+   Export
    ───────────────────────────────────────────── */
+
+/**
+ * Export the current appliance list and summary as a CSV file.
+ */
+function exportCSV() {
+  const days  = parseFloat(daysInput.value) || 30;
+  const price = parseFloat(kwPriceInput.value) || 0;
+
+  const rows = [];
+
+  // Report header
+  rows.push(["Electricity Usage Estimator – Monthly Report"]);
+  rows.push(["Rate ($/kWh)", price.toFixed(3)]);
+  rows.push(["Billing Days", days]);
+  rows.push(["Generated", new Date().toLocaleString()]);
+  rows.push([]);
+
+  // Table header
+  rows.push(["Appliance", "Power (kW)", "Hours/Day", "Status", "Monthly kWh", "Monthly Cost ($)"]);
+
+  let totalActiveKwh  = 0;
+  let totalActiveCost = 0;
+  let totalOffKwh     = 0;
+  let totalOffCost    = 0;
+
+  state.appliances.forEach((appliance) => {
+    const monthlyKwh  = calcMonthlyKwh(appliance.kw, appliance.hoursPerDay, days);
+    const monthlyCost = monthlyKwh * price;
+    const isOn        = appliance.status === "on";
+
+    if (isOn) {
+      totalActiveKwh  += monthlyKwh;
+      totalActiveCost += monthlyCost;
+    } else {
+      totalOffKwh  += monthlyKwh;
+      totalOffCost += monthlyCost;
+    }
+
+    rows.push([
+      appliance.name,
+      appliance.kw.toFixed(3),
+      appliance.hoursPerDay,
+      isOn ? "On" : "Off",
+      monthlyKwh.toFixed(2),
+      monthlyCost.toFixed(2),
+    ]);
+  });
+
+  // Summary
+  rows.push([]);
+  rows.push(["Summary"]);
+  rows.push(["Total Usage – Active Appliances (kWh)", totalActiveKwh.toFixed(2)]);
+  rows.push(["Total Monthly Cost – Active ($)",       totalActiveCost.toFixed(2)]);
+  rows.push(["Potential Savings – Off Appliances (kWh)", totalOffKwh.toFixed(2)]);
+  rows.push(["Potential Savings – Off Appliances ($)",   totalOffCost.toFixed(2)]);
+
+  // Encode to CSV
+  const csvContent = rows
+    .map((row) =>
+      row
+        .map((cell) => {
+          const s = String(cell);
+          return /[",\n\r]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
+        })
+        .join(",")
+    )
+    .join("\r\n");
+
+  const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement("a");
+  a.href     = url;
+  a.download = "electricity_usage_estimate.csv";
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+document.getElementById("export-csv-btn").addEventListener("click", exportCSV);
+document.getElementById("print-btn").addEventListener("click", () => window.print());
+
+
 function escapeHtml(str) {
   return str
     .replace(/&/g, "&amp;")

@@ -344,6 +344,37 @@ input[type="number"]:focus {
   border: 1.5px dashed var(--border);
 }
 
+/* ---- Export actions ---- */
+.export-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 24px;
+  flex-wrap: wrap;
+}
+
+.btn-export {
+  background: var(--primary-light);
+  color: var(--primary-dark);
+  border: 1.5px solid #bfdbfe;
+  padding: 9px 20px;
+  font-size: .88rem;
+}
+
+.btn-export:hover {
+  background: #dbeafe;
+  border-color: var(--primary);
+}
+
+@media print {
+  .export-actions,
+  #add-section,
+  #price-section,
+  #list-section,
+  footer { display: none !important; }
+  body { background: #fff; padding: 0; }
+  .card { box-shadow: none; border: none; }
+}
+
 /* ---- Footer ---- */
 footer {
   text-align: center;
