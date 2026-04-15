@@ -219,6 +219,7 @@ currencySelect.addEventListener("change", () => {
   if (!isNaN(currentPrice) && currentPrice > 0) {
     const priceInNGN    = currentPrice * CURRENCIES[prevCode].rateToNGN;
     const priceInNew    = priceInNGN / CURRENCIES[newCode].rateToNGN;
+    // Remove unnecessary trailing zeros (e.g. "1.5000" → "1.5")
     kwPriceInput.value  = priceInNew.toFixed(4).replace(/\.?0+$/, "");
   }
 
